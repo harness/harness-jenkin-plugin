@@ -1,0 +1,24 @@
+<?jelly escape-by-default='true'?>
+<div>
+    Integrates Jenkins pipelines with the Harness platform via the Harness CLI (<code>hc</code>).
+
+    <p>This plugin provides two pipeline steps:</p>
+    <ul>
+        <li>
+            <b>hc</b> — Runs any Harness CLI command directly from a pipeline step.
+            The CLI binary is automatically downloaded from GitHub releases and installed on the agent.
+            Authentication (<code>hc auth login</code>) is handled automatically once per build
+            using the API token configured under <i>Manage Jenkins → Configure System → Harness CLI Configuration</i>.
+        </li>
+        <li>
+            <b>publishHarnessBuildInfo</b> — Collects Jenkins build metadata (job details, git info,
+            trigger causes, agent labels, pipeline stage) and publishes it to the build log.
+            Adds a sidebar link on the build page that opens the Harness Artifact Registry for the configured registry.
+        </li>
+    </ul>
+
+    <p>
+        The Harness CLI tool installation is managed under <i>Manage Jenkins → Tools → Harness CLI installations</i>,
+        where you can pin a specific CLI version or leave it blank to always use the latest GitHub release.
+    </p>
+</div>

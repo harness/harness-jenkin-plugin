@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="Harness CLI Installation" field="harnessCliInstallation"
+             description="Select the Harness CLI installation to use. Sets HARNESS_CLI_PATH for the entire build, making 'hc' available to all build steps and shell scripts.">
+        <f:select/>
+    </f:entry>
+</j:jelly>

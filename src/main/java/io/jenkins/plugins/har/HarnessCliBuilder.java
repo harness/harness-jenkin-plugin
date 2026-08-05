@@ -113,7 +113,15 @@ public class HarnessCliBuilder extends Builder {
                     performLogin(launcher, workspace, env, hcBinaryPath, isWindows, listener);
                     build.addAction(new HarnessCliLoginTracker());
                 } catch (IOException e) {
-                    listener.error("[hc] Login failed: " + ExceptionUtils.getRootCauseMessage(e));
+                    String msg = ExceptionUtils.getRootCauseMessage(e);
+                    listener.error("[hc] Login failed: " + msg);
+                    if (msg != null && (msg.contains("No such file or directory")
+                            || msg.contains("Cannot run program")
+                            || msg.contains("error: 2"))) {
+                        listener.error("[hc] Harness CLI binary not found at: " + hcBinaryPath);
+                        listener.error("     → Go to Manage Jenkins → Tools → Harness CLI installations and add an installation.");
+                        listener.error("     → Or install the hc binary on the system PATH of the agent.");
+                    }
                     return false;
                 }
             }

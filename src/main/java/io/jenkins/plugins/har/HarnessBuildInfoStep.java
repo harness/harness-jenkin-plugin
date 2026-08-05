@@ -46,6 +46,15 @@ import java.util.stream.Collectors;
  * <p>The {@code registry} parameter is optional. When omitted the link points to the top-level
  * Harness Artifact Registry module for the configured account.
  */
+
+/*
+
+TODO
+Uncomment these two complete code of  class to enable link showing feature as BADGE
+HarnessBuildInfoPublisher.java and HarnessBuildInfoStep.java
+jelly is already there it will start showing under post build step for freestyle
+and publishHarnessBuildInfo step will be available for normal jenkin pipeline
+
 public class HarnessBuildInfoStep extends Step {
 
     private String registry;
@@ -148,11 +157,11 @@ public class HarnessBuildInfoStep extends Step {
             return null;
         }
 
-        /**
-         * Constructs the Harness Artifact Registry URL.
-         * Format: {apiUrl}/ng/account/{accountId}/module/har/orgs/{orgId}/projects/{projectId}/registries/{registry}
-         * Falls back to shorter paths when org, project or registry are not provided.
-         */
+
+         // Constructs the Harness Artifact Registry URL.
+         // Format: {apiUrl}/ng/account/{accountId}/module/har/orgs/{orgId}/projects/{projectId}/registries/{registry}
+         // Falls back to shorter paths when org, project or registry are not provided.
+
         static String buildArtifactUrl(String apiUrl, String accountId,
                                         String orgId, String projectId, String registry) {
             String base = StringUtils.stripEnd(apiUrl, "/");
@@ -213,3 +222,5 @@ public class HarnessBuildInfoStep extends Step {
         }
     }
 }
+
+ */

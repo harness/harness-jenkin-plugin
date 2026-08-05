@@ -37,6 +37,14 @@ import java.io.IOException;
  *   <li>Registry: {@code rpm-jenkin} (optional)</li>
  * </ul>
  */
+
+/*
+TODO
+Uncomment these two complete code of  class to enable link showing feature as BADGE
+HarnessBuildInfoPublisher.java and HarnessBuildInfoStep.java
+jelly is already there it will start showing under post build step for freestyle
+and publishHarnessBuildInfo step will be available for normal jenkin pipeline
+
 public class HarnessBuildInfoPublisher extends Notifier {
 
     private String registry;
@@ -119,3 +127,5 @@ public class HarnessBuildInfoPublisher extends Notifier {
         }
     }
 }
+
+ */

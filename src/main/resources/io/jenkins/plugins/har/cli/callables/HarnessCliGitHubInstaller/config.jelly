@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="${%Version}" field="version"
+             description="Harness CLI version to install (e.g. 0.0.21). Leave empty to install the latest release.">
+        <f:textbox/>
+    </f:entry>
+</j:jelly>

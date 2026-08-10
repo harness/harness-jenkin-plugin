@@ -1,0 +1,11 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="Registry" field="registry"
+             description="Harness Artifact Registry name (optional). When set, the sidebar link points directly to this registry, e.g. rpm-jenkin.">
+        <f:textbox/>
+    </f:entry>
+    <f:entry title="Publish only on success" field="publishOnlyOnSuccess"
+             description="When checked, the sidebar link is not added if the build result is worse than SUCCESS.">
+        <f:checkbox/>
+    </f:entry>
+</j:jelly>

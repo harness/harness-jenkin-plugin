@@ -1,0 +1,11 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:entry title="Harness CLI Installation" field="harnessCliInstallation"
+             description="Select a configured Harness CLI installation. Leave empty to use hc from system PATH.">
+        <f:select/>
+    </f:entry>
+    <f:entry title="Command" field="command"
+             description="The hc command to run. You may include or omit the leading 'hc', e.g.: hc artifact push rpm my-repo file.rpm">
+        <f:textbox/>
+    </f:entry>
+</j:jelly>

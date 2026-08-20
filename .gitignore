@@ -26,5 +26,6 @@ replay_pid*
 .idea/*
 work/*
 target/*
+settings.xml
 
 

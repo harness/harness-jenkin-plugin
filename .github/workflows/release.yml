@@ -1,0 +1,13 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: jenkins-infra/github-reusable-workflows/.github/workflows/maven-release.yml@main
+    with:
+      java-cache: maven
+    secrets:
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}

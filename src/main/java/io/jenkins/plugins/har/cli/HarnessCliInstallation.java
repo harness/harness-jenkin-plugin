@@ -15,7 +15,7 @@ import io.jenkins.plugins.har.cli.callables.HarnessCliGitHubInstaller;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class HarnessCliInstallation extends ToolInstallation
         }
 
         @Override
-        public boolean configure(StaplerRequest req, JSONObject o) throws FormException {
+        public boolean configure(StaplerRequest2 req, JSONObject o) throws FormException {
             super.configure(req, o);
             save();
             return true;

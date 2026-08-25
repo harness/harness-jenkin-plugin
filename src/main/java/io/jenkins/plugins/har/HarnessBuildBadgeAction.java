@@ -10,6 +10,7 @@ import java.io.IOException;
  * A sidebar action added to a Jenkins build when {@code publishHarnessBuildInfo} runs.
  * Clicking the link in the sidebar redirects the browser to the Harness Artifact Registry page.
  */
+
 public class HarnessBuildBadgeAction implements Action {
 
     private final String artifactUrl;

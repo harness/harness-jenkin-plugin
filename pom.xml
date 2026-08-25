@@ -5,21 +5,25 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>5.22</version>
+        <version>6.2211.v27f680c93c53</version>
         <relativePath/>
     </parent>
     <groupId>io.jenkins.plugins</groupId>
-    <artifactId>harness</artifactId>
+    <artifactId>harness-jenkin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
-    <name>Harness Artifactory</name>
+    <name>Harness Plugin</name>
     <description>A plugin to integrate harness artifactory CLI with Jenkins</description>
-    <url>https://github.com/harness/harness-jenkin-plugin</url>
+    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
-        <jenkins.version>2.479.1</jenkins.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <jenkins.baseline>2.541</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.3</jenkins.version>
+        <hpi.strictBundledArtifacts>true</hpi.strictBundledArtifacts>
+        <banObsoleteDependencyOverrides.skip>false</banObsoleteDependencyOverrides.skip>
+        <ban-junit4-imports.skip>false</ban-junit4-imports.skip>
+        <!--ban-deprecated-stapler.skip>false</ban-deprecated-stapler.skip-->
+        <ban-commons-lang-2.skip>false</ban-commons-lang-2.skip>
     </properties>
 
 
@@ -36,15 +40,8 @@
         <url>https://harness.io</url>
     </organization>
 
-
-    <developers>
-        <developer>
-            <name>Ashwini Chourasia</name>
-            <email>c_ashwini.chourasia@harness.io</email>
-        </developer>
-    </developers>
     <scm>
-        <connection>scm:git:git://github.com/harness/harness-jenkin-plugin.git</connection>
+        <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:harness/harness-jenkin-plugin.git</developerConnection>
         <url>https://github.com/harness/harness-jenkin-plugin</url>
         <tag>${scmTag}</tag>

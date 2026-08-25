@@ -4,12 +4,13 @@ import hudson.Extension;
 import hudson.util.FormValidation;
 import hudson.util.Secret;
 import jenkins.model.GlobalConfiguration;
+import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.verb.POST;
 
 import javax.annotation.Nonnull;
@@ -100,6 +101,7 @@ public class HarnessGlobalConfiguration extends GlobalConfiguration {
     @POST
     @SuppressWarnings("unused")
     public FormValidation doCheckApiUrl(@QueryParameter String value) {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         if (StringUtils.isBlank(value)) {
             return FormValidation.warning("API URL is required. Default: https://app.harness.io");
         }
@@ -112,6 +114,7 @@ public class HarnessGlobalConfiguration extends GlobalConfiguration {
     @POST
     @SuppressWarnings("unused")
     public FormValidation doCheckApiToken(@QueryParameter String value) {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         if (StringUtils.isBlank(value)) {
             return FormValidation.warning("API Token is required for 'hc auth login'.");
         }
@@ -123,7 +126,7 @@ public class HarnessGlobalConfiguration extends GlobalConfiguration {
     // -------------------------------------------------------------------------
 
     @Override
-    public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
+    public boolean configure(StaplerRequest2 req, JSONObject json) throws FormException {
         req.bindJSON(this, json);
         save();
         return true;

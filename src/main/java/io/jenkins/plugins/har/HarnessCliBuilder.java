@@ -22,6 +22,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.verb.GET;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
@@ -284,7 +285,9 @@ public class HarnessCliBuilder extends Builder {
                     .getInstallations();
         }
 
+        @GET
         public ListBoxModel doFillHarnessCliInstallationItems() {
+            jenkins.model.Jenkins.get().checkPermission(jenkins.model.Jenkins.READ);
             ListBoxModel items = new ListBoxModel();
             items.add("(Use hc from system PATH)", "");
             for (HarnessCliInstallation inst : getInstallations()) {

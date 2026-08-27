@@ -20,7 +20,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 
 /**
@@ -115,7 +115,7 @@ public class HarnessBuildInfoPublisher extends Notifier {
     @Symbol("harnessPublishBuildInfo")
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Publish Harness Build Info";

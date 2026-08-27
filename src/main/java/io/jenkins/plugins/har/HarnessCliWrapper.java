@@ -16,7 +16,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.verb.GET;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 
 /**
@@ -118,7 +118,7 @@ public class HarnessCliWrapper extends SimpleBuildWrapper {
     @Symbol("harnessCliEnv")
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Set up Harness CLI environment";

@@ -9,11 +9,11 @@
         <relativePath/>
     </parent>
     <groupId>io.jenkins.plugins</groupId>
-    <artifactId>harness-jenkin</artifactId>
+    <artifactId>harness</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Harness Plugin</name>
-    <description>A plugin to integrate harness artifactory CLI with Jenkins</description>
+    <description>A plugin to integrate harness artifact registry CLI with Jenkins</description>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
@@ -122,8 +122,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.462.x</artifactId>
-                <version>3387.v0f2773fa_3200</version>
+                <artifactId>bom-2.541.x</artifactId>
+                <version>6931.vea_a_b_c6fd017d</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

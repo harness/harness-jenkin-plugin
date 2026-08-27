@@ -22,7 +22,7 @@ import org.apache.http.util.EntityUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -264,7 +264,7 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
     @Extension
     public static final class DescriptorImpl extends ToolInstallerDescriptor<HarnessCliGitHubInstaller> {
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Install from GitHub releases (harness/harness-cli)";

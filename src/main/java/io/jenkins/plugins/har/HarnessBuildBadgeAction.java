@@ -3,7 +3,7 @@ package io.jenkins.plugins.har;
 import hudson.model.Action;
 import org.kohsuke.stapler.StaplerResponse2;
 
-import javax.annotation.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import java.io.IOException;
 
 /**

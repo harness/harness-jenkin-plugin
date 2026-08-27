@@ -17,7 +17,7 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -81,7 +81,7 @@ public class HcStep extends Step {
 
         private final String[] args;
 
-        protected Execution(String[] args, @Nonnull StepContext context) {
+        protected Execution(String[] args, @NonNull StepContext context) {
             super(context);
             this.args = args;
         }
@@ -267,7 +267,7 @@ public class HcStep extends Step {
             return "hc";
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Run Harness CLI (hc) command";

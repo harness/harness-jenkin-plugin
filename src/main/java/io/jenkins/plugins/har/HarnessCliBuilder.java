@@ -24,7 +24,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.verb.GET;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -268,7 +268,7 @@ public class HarnessCliBuilder extends Builder {
     @Symbol("harnessCliRun")
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Run Harness CLI (hc) command";

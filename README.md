@@ -31,10 +31,8 @@ from [GitHub releases (harness/harness-cli)](https://github.com/harness/harness-
 
 ## Requirements
 
-| Requirement | Minimum version |
+| Requirement | Details |
 |---|---|
-| Jenkins | 2.479.1 |
-| Java | 11 |
 | Harness account | Any tier |
 | Harness Personal Access Token (PAT) | Format: `pat.<AccountID>.<random>.<random>` |
 

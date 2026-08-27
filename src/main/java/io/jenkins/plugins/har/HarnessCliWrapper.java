@@ -5,6 +5,8 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
+import hudson.model.Item;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildWrapperDescriptor;
@@ -12,6 +14,7 @@ import hudson.util.ListBoxModel;
 import io.jenkins.plugins.har.cli.HarnessCliInstallation;
 import jenkins.tasks.SimpleBuildWrapper;
 import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.verb.GET;
@@ -145,8 +148,8 @@ public class HarnessCliWrapper extends SimpleBuildWrapper {
         }
 
         @GET
-        public ListBoxModel doFillHarnessCliInstallationItems() {
-            jenkins.model.Jenkins.get().checkPermission(jenkins.model.Jenkins.READ);
+        public ListBoxModel doFillHarnessCliInstallationItems(@AncestorInPath Job<?, ?> job) {
+            job.checkPermission(Item.CONFIGURE);
             ListBoxModel items = new ListBoxModel();
             items.add("(Use hc from system PATH)", "");
             for (HarnessCliInstallation inst : getInstallations()) {

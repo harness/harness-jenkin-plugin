@@ -62,10 +62,6 @@
     <dependencies>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-job</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-step-api</artifactId>
         </dependency>
         <dependency>
@@ -75,10 +71,6 @@
         <dependency>
             <groupId>org.jenkinsci.plugins</groupId>
             <artifactId>pipeline-model-definition</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>credentials</artifactId>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
@@ -93,23 +85,10 @@
             <artifactId>jackson2-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>plain-credentials</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>git</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.36</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>jenkins-test-harness</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.jenkins</groupId>

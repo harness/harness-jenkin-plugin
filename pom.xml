@@ -42,8 +42,8 @@
 
     <scm>
         <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:harness/harness-jenkin-plugin.git</developerConnection>
-        <url>https://github.com/harness/harness-jenkin-plugin</url>
+        <developerConnection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
         <tag>${scmTag}</tag>
     </scm>
     <repositories>

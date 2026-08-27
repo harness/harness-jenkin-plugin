@@ -1,10 +1,8 @@
 package io.jenkins.plugins.har;
 
 import hudson.model.Action;
-import org.kohsuke.stapler.StaplerResponse2;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
-import java.io.IOException;
 
 /**
  * A sidebar action added to a Jenkins build when {@code publishHarnessBuildInfo} runs.
@@ -32,7 +30,7 @@ public class HarnessBuildBadgeAction implements Action {
     @CheckForNull
     @Override
     public String getIconFileName() {
-        return "symbol-harness plugin-harness-upload";
+        return "/plugin/harness/icons/harness.png";
     }
 
     @Override
@@ -42,15 +40,6 @@ public class HarnessBuildBadgeAction implements Action {
 
     @Override
     public String getUrlName() {
-        return "harness-artifact-info";
-    }
-
-    /**
-     * Stapler calls this when the user clicks the sidebar link.
-     * Redirects the browser to the Harness Artifact Registry page.
-     */
-    @SuppressWarnings({"lgtm[jenkins/csrf]", "lgtm[jenkins/no-permission-check]"})
-    public void doIndex(StaplerResponse2 rsp) throws IOException {
-        rsp.sendRedirect2(artifactUrl);
+        return artifactUrl;
     }
 }

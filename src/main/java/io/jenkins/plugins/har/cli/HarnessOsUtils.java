@@ -11,7 +11,7 @@ public class HarnessOsUtils {
      * Matches the actual naming from harness/harness-cli releases:
      *   linux | mac-os | windows
      *
-     * Designed to run on the agent node (inside a MasterToSlaveFileCallable).
+     * Designed to run on the agent node (inside a MasterToSlaveCallable).
      */
     public static String getOs() {
         String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
@@ -25,7 +25,7 @@ public class HarnessOsUtils {
      * Matches the actual naming from harness/harness-cli releases:
      *   x86_64 | arm64 | i386
      *
-     * Designed to run on the agent node (inside a MasterToSlaveFileCallable).
+     * Designed to run on the agent node (inside a MasterToSlaveCallable).
      */
     public static String getArch() {
         String arch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);

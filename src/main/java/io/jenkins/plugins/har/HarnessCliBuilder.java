@@ -114,7 +114,10 @@ public class HarnessCliBuilder extends Builder {
         if (build.getAction(HarnessCliLoginTracker.class) == null) {
             try {
                 performLogin(launcher, workspace, env, hcBinaryPath, isWindows, listener);
-                build.addAction(new HarnessCliLoginTracker());
+                build.addAction(new HarnessCliLoginTracker(
+                        hcBinaryPath,
+                        workspace.getRemote(),
+                        env.get("NODE_NAME", "")));
             } catch (IOException e) {
                 String msg = ExceptionUtils.getRootCauseMessage(e);
                 listener.error("[hc] Login failed: " + msg);

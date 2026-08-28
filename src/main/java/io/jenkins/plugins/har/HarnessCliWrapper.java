@@ -12,6 +12,8 @@ import hudson.model.TaskListener;
 import hudson.tasks.BuildWrapperDescriptor;
 import hudson.util.ListBoxModel;
 import io.jenkins.plugins.har.cli.HarnessCliInstallation;
+import io.jenkins.plugins.har.cli.HarnessCliLoginTracker;
+import io.jenkins.plugins.har.cli.HcStep;
 import jenkins.tasks.SimpleBuildWrapper;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.AncestorInPath;
@@ -59,6 +61,8 @@ public class HarnessCliWrapper extends SimpleBuildWrapper {
                       Launcher launcher, TaskListener listener, EnvVars initialEnvironment)
             throws IOException, InterruptedException {
 
+        context.setDisposer(new HarnessDisposer());
+
         if (harnessCliInstallation == null || harnessCliInstallation.isEmpty()) {
             listener.getLogger().println("[Harness CLI] No installation selected — using hc from system PATH.");
             return;
@@ -104,6 +108,23 @@ public class HarnessCliWrapper extends SimpleBuildWrapper {
             }
         }
         return null;
+    }
+
+    private static final class HarnessDisposer extends SimpleBuildWrapper.Disposer {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void tearDown(@NonNull Run<?, ?> build, @NonNull FilePath workspace,
+                             @NonNull Launcher launcher, @NonNull TaskListener listener)
+                throws IOException, InterruptedException {
+            HarnessCliLoginTracker tracker = build.getAction(HarnessCliLoginTracker.class);
+            if (tracker == null || !tracker.markLoggedOut()) {
+                return;
+            }
+            EnvVars env = build.getEnvironment(listener);
+            boolean isWindows = !launcher.isUnix();
+            HcStep.Execution.performLogout(launcher, workspace, env, tracker.getHcBinaryPath(), isWindows, listener);
+        }
     }
 
     private static hudson.model.Node workspaceToNode(FilePath workspace) {

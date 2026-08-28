@@ -110,7 +110,10 @@ public class HcStep extends Step {
             synchronized (run) {
                 if (run.getAction(HarnessCliLoginTracker.class) == null) {
                     performLogin(launcher, workspace, env, hcBinaryPath, isWindows, listener);
-                    run.addAction(new HarnessCliLoginTracker());
+                    run.addAction(new HarnessCliLoginTracker(
+                            hcBinaryPath,
+                            workspace != null ? workspace.getRemote() : "",
+                            env.get("NODE_NAME", "")));
                 }
             }
 
@@ -223,6 +226,36 @@ public class HcStep extends Step {
                         + ". Check the credentials under Manage Jenkins → Configure System → Harness CLI Configuration.");
             }
             listener.getLogger().println("[hc] Login successful.");
+        }
+
+        /**
+         * Runs {@code hc auth logout} to clean up credentials from disk at build end.
+         * Called by {@link io.jenkins.plugins.har.HarnessCliWrapper}'s Disposer (Freestyle)
+         * and by {@link io.jenkins.plugins.har.HarnessRunListener} (Pipeline).
+         */
+        public static void performLogout(Launcher launcher, FilePath workspace, EnvVars env,
+                                          String hcBinaryPath, boolean isWindows,
+                                          TaskListener listener)
+                throws IOException, InterruptedException {
+
+            ArgumentListBuilder builder = new ArgumentListBuilder();
+            builder.add(hcBinaryPath).add("auth").add("logout");
+            if (isWindows) {
+                builder = builder.toWindowsCommand();
+            }
+            listener.getLogger().println("[hc] Running 'hc auth logout'...");
+            int exitCode = launcher.launch()
+                    .envs(env)
+                    .pwd(workspace)
+                    .cmds(builder)
+                    .stdout(listener.getLogger())
+                    .stderr(listener.getLogger())
+                    .join();
+            if (exitCode != 0) {
+                listener.getLogger().println("[hc] WARNING: 'hc auth logout' exited with code " + exitCode);
+            } else {
+                listener.getLogger().println("[hc] Logout successful.");
+            }
         }
 
         /**

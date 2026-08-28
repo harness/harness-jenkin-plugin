@@ -23,7 +23,7 @@ import org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.PrintStream;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,7 +85,7 @@ public class HarnessBuildInfoStep extends Step {
 
         private final String registry;
 
-        protected Execution(String registry, @Nonnull StepContext context) {
+        protected Execution(String registry, @NonNull StepContext context) {
             super(context);
             this.registry = registry;
         }
@@ -210,7 +210,7 @@ public class HarnessBuildInfoStep extends Step {
             return "publishHarnessBuildInfo";
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Publish Harness Build Info";

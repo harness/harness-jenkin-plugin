@@ -17,7 +17,7 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -81,7 +81,7 @@ public class HcStep extends Step {
 
         private final String[] args;
 
-        protected Execution(String[] args, @Nonnull StepContext context) {
+        protected Execution(String[] args, @NonNull StepContext context) {
             super(context);
             this.args = args;
         }
@@ -110,7 +110,10 @@ public class HcStep extends Step {
             synchronized (run) {
                 if (run.getAction(HarnessCliLoginTracker.class) == null) {
                     performLogin(launcher, workspace, env, hcBinaryPath, isWindows, listener);
-                    run.addAction(new HarnessCliLoginTracker());
+                    run.addAction(new HarnessCliLoginTracker(
+                            hcBinaryPath,
+                            workspace != null ? workspace.getRemote() : "",
+                            env.get("NODE_NAME", "")));
                 }
             }
 
@@ -226,6 +229,36 @@ public class HcStep extends Step {
         }
 
         /**
+         * Runs {@code hc auth logout} to clean up credentials from disk at build end.
+         * Called by {@link io.jenkins.plugins.har.HarnessCliWrapper}'s Disposer (Freestyle)
+         * and by {@link io.jenkins.plugins.har.HarnessRunListener} (Pipeline).
+         */
+        public static void performLogout(Launcher launcher, FilePath workspace, EnvVars env,
+                                          String hcBinaryPath, boolean isWindows,
+                                          TaskListener listener)
+                throws IOException, InterruptedException {
+
+            ArgumentListBuilder builder = new ArgumentListBuilder();
+            builder.add(hcBinaryPath).add("auth").add("logout");
+            if (isWindows) {
+                builder = builder.toWindowsCommand();
+            }
+            listener.getLogger().println("[hc] Running 'hc auth logout'...");
+            int exitCode = launcher.launch()
+                    .envs(env)
+                    .pwd(workspace)
+                    .cmds(builder)
+                    .stdout(listener.getLogger())
+                    .stderr(listener.getLogger())
+                    .join();
+            if (exitCode != 0) {
+                listener.getLogger().println("[hc] WARNING: 'hc auth logout' exited with code " + exitCode);
+            } else {
+                listener.getLogger().println("[hc] Logout successful.");
+            }
+        }
+
+        /**
          * PAT format: {@code pat.<AccountID>.<random>.<random>}
          * Returns the AccountID segment, or an empty string if the token is malformed.
          */
@@ -267,7 +300,7 @@ public class HcStep extends Step {
             return "hc";
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Run Harness CLI (hc) command";

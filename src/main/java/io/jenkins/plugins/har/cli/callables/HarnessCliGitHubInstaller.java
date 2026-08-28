@@ -4,14 +4,13 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.model.Node;
 import hudson.model.TaskListener;
-import hudson.remoting.VirtualChannel;
 import hudson.tools.ToolInstallation;
 import hudson.tools.ToolInstaller;
 import hudson.tools.ToolInstallerDescriptor;
 import io.jenkins.plugins.har.Constants;
 import io.jenkins.plugins.har.cli.HarnessCliInstallation;
 import io.jenkins.plugins.har.cli.HarnessOsUtils;
-import jenkins.MasterToSlaveFileCallable;
+import jenkins.security.MasterToSlaveCallable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -22,8 +21,7 @@ import org.apache.http.util.EntityUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.Nonnull;
-import java.io.File;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -89,10 +87,10 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
         FilePath cliPath  = toolHome.child(binaryName);
 
         // Detect OS + arch on the actual agent node
-        String osInfo = toolHome.act(new MasterToSlaveFileCallable<String>() {
+        String osInfo = toolHome.act(new MasterToSlaveCallable<String, IOException>() {
             private static final long serialVersionUID = 1L;
             @Override
-            public String invoke(File f, VirtualChannel channel) throws IOException {
+            public String call() throws IOException {
                 return HarnessOsUtils.getOs() + "|" + HarnessOsUtils.getArch();
             }
         });
@@ -264,7 +262,7 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
     @Extension
     public static final class DescriptorImpl extends ToolInstallerDescriptor<HarnessCliGitHubInstaller> {
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Install from GitHub releases (harness/harness-cli)";

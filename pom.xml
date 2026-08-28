@@ -9,11 +9,11 @@
         <relativePath/>
     </parent>
     <groupId>io.jenkins.plugins</groupId>
-    <artifactId>harness-jenkin</artifactId>
+    <artifactId>harness</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Harness Plugin</name>
-    <description>A plugin to integrate harness artifactory CLI with Jenkins</description>
+    <description>A plugin to integrate harness artifact registry CLI with Jenkins</description>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
     <properties>
@@ -42,8 +42,8 @@
 
     <scm>
         <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:harness/harness-jenkin-plugin.git</developerConnection>
-        <url>https://github.com/harness/harness-jenkin-plugin</url>
+        <developerConnection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
         <tag>${scmTag}</tag>
     </scm>
     <repositories>
@@ -62,10 +62,6 @@
     <dependencies>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-job</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-step-api</artifactId>
         </dependency>
         <dependency>
@@ -75,10 +71,6 @@
         <dependency>
             <groupId>org.jenkinsci.plugins</groupId>
             <artifactId>pipeline-model-definition</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>credentials</artifactId>
         </dependency>
         <dependency>
             <groupId>io.jenkins.plugins</groupId>
@@ -93,23 +85,10 @@
             <artifactId>jackson2-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>plain-credentials</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>git</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.36</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>jenkins-test-harness</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.jenkins</groupId>
@@ -122,8 +101,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.462.x</artifactId>
-                <version>3387.v0f2773fa_3200</version>
+                <artifactId>bom-2.541.x</artifactId>
+                <version>6931.vea_a_b_c6fd017d</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

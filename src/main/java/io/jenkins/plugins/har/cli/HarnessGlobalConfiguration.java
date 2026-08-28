@@ -13,7 +13,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.verb.POST;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Global Jenkins configuration for the Harness CLI plugin.
@@ -132,7 +132,7 @@ public class HarnessGlobalConfiguration extends GlobalConfiguration {
         return true;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public String getDisplayName() {
         return "Harness CLI Configuration";

@@ -7,6 +7,8 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Item;
+import hudson.model.Job;
 import hudson.model.Node;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
@@ -20,11 +22,12 @@ import io.jenkins.plugins.har.cli.HcStep;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.verb.GET;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -107,24 +110,25 @@ public class HarnessCliBuilder extends Builder {
         String hcBinaryPath = HcStep.Execution.getHcCliPath(env, isWindows);
         listener.getLogger().println("[hc] Using binary: " + hcBinaryPath);
 
-        // Auto-login once per build — synchronized so parallel Freestyle steps don't race
-        synchronized (build) {
-            if (build.getAction(HarnessCliLoginTracker.class) == null) {
-                try {
-                    performLogin(launcher, workspace, env, hcBinaryPath, isWindows, listener);
-                    build.addAction(new HarnessCliLoginTracker());
-                } catch (IOException e) {
-                    String msg = ExceptionUtils.getRootCauseMessage(e);
-                    listener.error("[hc] Login failed: " + msg);
-                    if (msg != null && (msg.contains("No such file or directory")
-                            || msg.contains("Cannot run program")
-                            || msg.contains("error: 2"))) {
-                        listener.error("[hc] Harness CLI binary not found at: " + hcBinaryPath);
-                        listener.error("     → Go to Manage Jenkins → Tools → Harness CLI installations and add an installation.");
-                        listener.error("     → Or install the hc binary on the system PATH of the agent.");
-                    }
-                    return false;
+        // Auto-login once per build
+        if (build.getAction(HarnessCliLoginTracker.class) == null) {
+            try {
+                performLogin(launcher, workspace, env, hcBinaryPath, isWindows, listener);
+                build.addAction(new HarnessCliLoginTracker(
+                        hcBinaryPath,
+                        workspace.getRemote(),
+                        env.get("NODE_NAME", "")));
+            } catch (IOException e) {
+                String msg = ExceptionUtils.getRootCauseMessage(e);
+                listener.error("[hc] Login failed: " + msg);
+                if (msg != null && (msg.contains("No such file or directory")
+                        || msg.contains("Cannot run program")
+                        || msg.contains("error: 2"))) {
+                    listener.error("[hc] Harness CLI binary not found at: " + hcBinaryPath);
+                    listener.error("     → Go to Manage Jenkins → Tools → Harness CLI installations and add an installation.");
+                    listener.error("     → Or install the hc binary on the system PATH of the agent.");
                 }
+                return false;
             }
         }
 
@@ -268,7 +272,7 @@ public class HarnessCliBuilder extends Builder {
     @Symbol("harnessCliRun")
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Run Harness CLI (hc) command";
@@ -286,8 +290,8 @@ public class HarnessCliBuilder extends Builder {
         }
 
         @GET
-        public ListBoxModel doFillHarnessCliInstallationItems() {
-            jenkins.model.Jenkins.get().checkPermission(jenkins.model.Jenkins.READ);
+        public ListBoxModel doFillHarnessCliInstallationItems(@AncestorInPath Job<?, ?> job) {
+            job.checkPermission(Item.CONFIGURE);
             ListBoxModel items = new ListBoxModel();
             items.add("(Use hc from system PATH)", "");
             for (HarnessCliInstallation inst : getInstallations()) {

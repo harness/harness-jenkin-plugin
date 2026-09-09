@@ -76,7 +76,7 @@ The plugin automatically runs `hc auth login` before the first `hc` step in ever
 
     ![Add build step dropdown](docs/screenshot-add-build-step.png)
 
-    <img src="docs/screenshot-add-build-step.png" height="50%">
+    <img src="docs/screenshot-add-build-step.png" width="50%">
 
 2. Select the CLI installation (or leave as **Use hc from system PATH**) and type the `hc` command to run. 
 You may include or omit the leading `hc`. For example: `artifact push rpm my-repo /path/to/file.rpm`.

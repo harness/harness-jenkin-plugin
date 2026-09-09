@@ -4,6 +4,13 @@ A Jenkins plugin that integrates the [Harness CLI (`hc`)](https://github.com/har
 
 ---
 
+## Prerequisites
+
+- A Harness account (any tier)
+- A Harness Personal Access Token (PAT) in `pat.<AccountID>.<random>.<random>` format
+
+---
+
 ## Install and configure the plugin
 
 1. Install the Harness Plugin. Go to **Manage Jenkins** → **Plugins**.<br><img src="docs/install-plugin.png" width="70%">
@@ -27,19 +34,9 @@ from [GitHub releases (harness/harness-cli)](https://github.com/harness/harness-
 
 ---
 
-## Requirements
-
-| Requirement | Details |
-|---|---|
-| Harness account | Any tier |
-| Harness Personal Access Token (PAT) | Format: `pat.<AccountID>.<random>.<random>` |
-
----
-
-
 ## Usage
 
-### Configure the Harness CLI tool installation
+### Step 1: Configure the Harness CLI tool installation
 
 1. Go to **Manage Jenkins** → **Tools** and then navigate to **Harness CLI (hc) installations**.
 2. Click **Add Harness CLI (hc)**. Provide a name (for example, `harness-cli`).
@@ -51,9 +48,8 @@ from [GitHub releases (harness/harness-cli)](https://github.com/harness/harness-
 
 > Note: To always install the latest release, leave the version field empty.
 
----
 
-### Configure Harness credentials
+### Step 2: Configure Harness credentials
 
 Go to **Manage Jenkins** → **System** and then navigate to **Harness CLI Configuration**.
 
@@ -68,9 +64,8 @@ Go to **Manage Jenkins** → **System** and then navigate to **Harness CLI Confi
 
 The plugin automatically runs `hc auth login` before the first `hc` step in every build. The API token is always masked in build logs.
 
----
 
-### Use in a Freestyle job
+### Step 3: Use in a Freestyle job
 
 1. In a Freestyle job configuration, go to **Build Steps** → **Add build step** and then select **Run Harness CLI (hc) command**.
 
@@ -83,7 +78,7 @@ You may include or omit the leading `hc`. For example: `artifact push rpm my-rep
 
 ---
 
-## Pipeline Example
+## Pipeline Examples
 
 ### Declarative Pipeline - push an artifact
 

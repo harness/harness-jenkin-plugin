@@ -7,7 +7,7 @@ A Jenkins plugin that integrates the [Harness CLI (`hc`)](https://github.com/har
 ## Prerequisites
 
 - A Harness account (any tier)
-- A Harness Personal Access Token (PAT) in `pat.<AccountID>.<random>.<random>` format
+- A Harness Personal Access Token (PAT) in the `pat.<AccountID>.<random>.<random>` format
 
 ---
 

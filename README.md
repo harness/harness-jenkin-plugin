@@ -20,7 +20,7 @@ To use Harness CLI in your pipeline jobs, configure it as a tool in Jenkins. Go 
 ### Automatic installation from GitHub
 
 If your agent has internet access, you can configure the installer to automatically download the Harness CLI
-from [GitHub releases (harness/harness-cli)](https://github.com/harness/harness-cli/releases), as shown in the screenshot below.
+from [GitHub releases (harness/harness-cli)](https://github.com/harness/harness-cli/releases).
 
 
 <img src="docs/automatic-installation.png" width="30%">
@@ -74,16 +74,12 @@ The plugin automatically runs `hc auth login` before the first `hc` step in ever
 
 1. In a Freestyle job configuration, go to **Build Steps** → **Add build step** and then select **Run Harness CLI (hc) command**.
 
-![Add build step dropdown](docs/screenshot-add-build-step.png)
+    ![Add build step dropdown](docs/screenshot-add-build-step.png)
 
 2. Select the CLI installation (or leave as **Use hc from system PATH**) and type the `hc` command to run. 
-You may include or omit the leading `hc`. For example:
+You may include or omit the leading `hc`. For example: `artifact push rpm my-repo /path/to/file.rpm`.
 
-```
-artifact push rpm my-repo /path/to/file.rpm
-```
-
-![Run Harness CLI command build step](docs/screenshot-build-step-config.png)
+    ![Run Harness CLI command build step](docs/screenshot-build-step-config.png)
 
 ---
 

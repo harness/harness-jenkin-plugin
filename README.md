@@ -8,7 +8,7 @@ A Jenkins plugin that integrates the [Harness CLI (`hc`)](https://github.com/har
 
 1. Install the Harness Plugin. Go to **Manage Jenkins** → **Plugins**.<br><img src="docs/install-plugin.png" width="70%">
 2. Configure your Harness CLI details. Go to **Manage Jenkins** → **System**.<br><img src="docs/configure-plugin.png" width="30%">
-3. Configure Harness CLI as a tool in Jenkins. For more information, see [Configuring Harness CLI as a tool](#configuring-harness-cli-as-a-tool) section.
+3. Configure Harness CLI as a tool in Jenkins. For more information, see [Configure Harness CLI as a tool](#configure-harness-cli-as-a-tool) section.
 
 ---
 
@@ -57,6 +57,8 @@ from [GitHub releases (harness/harness-cli)](https://github.com/harness/harness-
 
 Go to **Manage Jenkins** → **System** and then navigate to **Harness CLI Configuration**.
 
+![Harness CLI system configuration](docs/screenshot-system-config.png)
+
 | Field | Description |
 |---|---|
 | **API URL** | Harness API endpoint. For example, `https://app.harness.io`. |
@@ -64,17 +66,13 @@ Go to **Manage Jenkins** → **System** and then navigate to **Harness CLI Confi
 | **Organization ID** | Optional. Your Harness Organization slug. For example, `default`. |
 | **Project ID** | Optional. Your Harness Project slug. |
 
-![Harness CLI system configuration](docs/screenshot-system-config.png)
-
-The plugin automatically runs `hc auth login` before the first `hc` step in every build and the API token is always masked in build logs.
+The plugin automatically runs `hc auth login` before the first `hc` step in every build. The API token is always masked in build logs.
 
 ---
 
 ### Use in a Freestyle job
 
 1. In a Freestyle job configuration, go to **Build Steps** → **Add build step** and then select **Run Harness CLI (hc) command**.
-
-    ![Add build step dropdown](docs/screenshot-add-build-step.png)
 
     <img src="docs/screenshot-add-build-step.png" width="50%">
 

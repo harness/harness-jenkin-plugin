@@ -115,7 +115,7 @@ pipeline {
 }
 ```
 
-### Declarative Pipeline — multiple artifact types
+### Declarative Pipeline - multiple artifact types
 
 ```groovy
 pipeline {

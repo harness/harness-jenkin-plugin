@@ -11,7 +11,6 @@ import hudson.tools.ToolInstallerDescriptor;
 import io.jenkins.plugins.har.Constants;
 import io.jenkins.plugins.har.cli.HarnessCliInstallation;
 import io.jenkins.plugins.har.cli.HarnessOsUtils;
-import jenkins.security.MasterToSlaveCallable;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -20,10 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpTimeoutException;
+import java.net.http.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -54,10 +50,19 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
     /** Minimum expected binary size – anything smaller is considered a failed download. */
     private static final long MIN_BINARY_SIZE_BYTES = 1024L * 1024L; // 1 MB
 
+    /** Marker file holding the version currently installed in the tool home. */
+    private static final String VERSION_MARKER_FILE = ".installed-version";
+
+    /** POSIX mode applied to the downloaded binary: rwxr-xr-x. */
+    private static final int EXECUTABLE_MODE = 0755;
+
     /** Total send() attempts on connect/request timeout only (not HTTP 4xx/5xx). */
     private static final int HTTP_MAX_ATTEMPTS = 8;
     private static final long HTTP_RETRY_INITIAL_DELAY_MS = 1_000L;
     private static final long HTTP_RETRY_MAX_DELAY_MS = 16_000L;
+    private static HttpClient httpClient = ProxyConfiguration.newHttpClientBuilder()
+            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .build();
 
     private String version;
 
@@ -90,49 +95,43 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
         boolean isWindows = !node.createLauncher(log).isUnix();
         String binaryName = HarnessOsUtils.getBinaryName(isWindows);
         FilePath cliPath  = toolHome.child(binaryName);
+        FilePath versionMarker = toolHome.child(VERSION_MARKER_FILE);
 
-        // Detect OS + arch on the actual agent node
-        String osInfo = toolHome.act(new MasterToSlaveCallable<String, IOException>() {
-            private static final long serialVersionUID = 1L;
-            @Override
-            public String call() throws IOException {
-                return HarnessOsUtils.getOs() + "|" + HarnessOsUtils.getArch();
-            }
-        });
-        String[] parts = osInfo.split("\\|", 2);
-        String os   = parts[0];
-        String arch = parts.length > 1 ? parts[1] : "x86_64";
+        // Cheapest check first: is a usable binary already on disk?
+        String installedVersion = cliPath.exists()
+                && cliPath.length() > MIN_BINARY_SIZE_BYTES
+                && versionMarker.exists()
+                ? versionMarker.readToString().trim()
+                : null;
 
-        log.getLogger().println("[Harness CLI] Agent detected: os=" + os + " arch=" + arch);
-
-        HttpClient httpClient = ProxyConfiguration.newHttpClientBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
-
-        // Resolve the target version FIRST so we can do a version-aware cache check.
+        // Only hit the GitHub API when no version is pinned in the configuration.
         String resolvedVersion = StringUtils.isBlank(version)
-                ? resolveLatestVersion(httpClient, log)
+                ? resolveLatestVersion(log)
                 : stripLeadingV(version);
 
-        // Skip download only when the binary exists AND the installed version matches.
-        FilePath versionMarker = toolHome.child(".installed-version");
-        if (cliPath.exists() && cliPath.length() > MIN_BINARY_SIZE_BYTES
-                && versionMarker.exists()
-                && resolvedVersion.equals(versionMarker.readToString().trim())) {
+        if (resolvedVersion.equals(installedVersion)) {
             log.getLogger().println("[Harness CLI] Already installed at " + cliPath.getRemote()
                     + " (v" + resolvedVersion + ") — skipping download.");
             return toolHome;
         }
 
+        // Detect OS + arch on the actual agent node (only needed for a download)
+        String osInfo = toolHome.act(new OsArchDetectorCallable());
+        String[] osArch = OsArchDetectorCallable.parseOsInfo(osInfo);
+        String os = osArch[0];
+        String arch = osArch[1];
+
+        log.getLogger().println("[Harness CLI] Agent detected: os=" + os + " arch=" + arch);
+
         String downloadUrl = buildDownloadUrl(resolvedVersion, os, arch);
         log.getLogger().println("[Harness CLI] Downloading v" + resolvedVersion + ": " + downloadUrl);
 
-        downloadAndExtract(httpClient, downloadUrl, toolHome, log);
+        downloadAndExtract(downloadUrl, toolHome, log);
 
         // Find the hc binary inside the extracted archive tree
         FilePath binary = findBinaryAfterExtraction(toolHome, binaryName, log);
         if (!isWindows) {
-            binary.chmod(0755);
+            binary.chmod(EXECUTABLE_MODE);
         }
 
         // Write the version marker so future runs can skip the download
@@ -150,7 +149,7 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
      * Calls the GitHub Releases API to get the latest version tag and strips the leading 'v'.
      * e.g.  "v1.3.30" → "1.3.30"
      */
-    private static String resolveLatestVersion(HttpClient httpClient, TaskListener log)
+    private static String resolveLatestVersion(TaskListener log)
             throws IOException, InterruptedException {
         log.getLogger().println("[Harness CLI] Querying GitHub API for latest release...");
         HttpRequest request = ProxyConfiguration.newHttpRequestBuilder(URI.create(Constants.GITHUB_API_LATEST))
@@ -160,7 +159,7 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
                 .build();
 
         HttpResponse<String> response = sendWithTimeoutRetry(
-                httpClient, request, HttpResponse.BodyHandlers.ofString(), log);
+                request, HttpResponse.BodyHandlers.ofString(), log);
         int status = response.statusCode();
         if (status != 200) {
             throw new IOException("GitHub API returned HTTP " + status
@@ -185,7 +184,7 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
     /**
      * Downloads the tar.gz from GitHub (following redirects) and extracts it into {@code toolHome}.
      */
-    private static void downloadAndExtract(HttpClient httpClient, String downloadUrl,
+    private static void downloadAndExtract(String downloadUrl,
                                            FilePath toolHome, TaskListener log)
             throws IOException, InterruptedException {
 
@@ -195,7 +194,7 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
                 .build();
 
         HttpResponse<InputStream> response = sendWithTimeoutRetry(
-                httpClient, request, HttpResponse.BodyHandlers.ofInputStream(), log);
+                request, HttpResponse.BodyHandlers.ofInputStream(), log);
         try (InputStream in = response.body()) {
             int status = response.statusCode();
             if (status < 200 || status >= 300) {
@@ -214,7 +213,6 @@ public class HarnessCliGitHubInstaller extends ToolInstaller {
      * {@link #HTTP_RETRY_MAX_DELAY_MS}.
      */
     private static <T> HttpResponse<T> sendWithTimeoutRetry(
-            HttpClient httpClient,
             HttpRequest request,
             HttpResponse.BodyHandler<T> bodyHandler,
             TaskListener log)
